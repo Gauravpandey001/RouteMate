@@ -11,7 +11,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -42,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       ),
       body: TabBarView(
         controller: _tabController,
+        physics: NeverScrollableScrollPhysics(), // Disable swipe to switch
         children: [
           FindPage(userId: widget.userId),
           OfferPage(userId: widget.userId),
