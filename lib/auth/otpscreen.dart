@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:routemate/dashboard.dart'; // Import the dashboard screen widget
+import 'package:routemate/dashboard.dart';
 import 'package:routemate/registration.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -62,7 +62,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   // If the user already exists, navigate to dashboard screen
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => DashboardScreen()),
+                    MaterialPageRoute(builder: (context) => DashboardScreen(userId: userCredential.user!.uid)),
                   );
                 }
               } catch (ex) {

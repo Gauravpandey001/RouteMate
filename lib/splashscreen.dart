@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'auth/phoneauth.dart';
+import 'dashboard.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,12 +13,23 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Add a delay before navigating to the PhoneAuth screen
+    // Add a delay before navigating to the Dashboard or PhoneAuth screen
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => PhoneAuth()),
-      );
+      // Check the user's authentication status
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        // User is signed in, navigate to Dashboard directly
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardScreen(userId: user.uid)),
+        );
+      } else {
+        // User is not signed in, navigate to PhoneAuth screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => PhoneAuth()),
+        );
+      }
     });
   }
 

@@ -1,6 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:routemate/pages/home.dart';
+import 'package:routemate/pages/myrides.dart';
+import 'package:routemate/pages/wallet.dart';
+import 'package:routemate/pages/profile.dart';
 
 class DashboardScreen extends StatefulWidget {
+  final String userId;
+
+  DashboardScreen({required this.userId});
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -8,27 +17,35 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text('Home'),
-    Text('My Rides'),
-    Text('Wallet'),
-    Text('Profile'),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        automaticallyImplyLeading: false, // Disable automatic back button
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Image.asset(
+                'lib/assets/routemate.png', // Path to your logo image
+                height: 30, // Adjust height as needed
+              ),
+            ),
+            Text(
+              'RouteMate', // New title
+              style: TextStyle(fontSize: 20), // Adjust font size as needed
+            ),
+          ],
+        ),
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          HomeScreen(userId: widget.userId),
+          MyRidesScreen(userId: widget.userId),
+          WalletScreen(userId: widget.userId),
+          ProfileScreen(userId: widget.userId), // Pass userId here
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -51,11 +68,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey, // Color for unselected items
-        selectedFontSize: 14.0, // Font size for selected item
-        unselectedFontSize: 12.0, // Font size for unselected items
+        unselectedItemColor: Colors.grey,
+        selectedFontSize: 14.0,
+        unselectedFontSize: 12.0,
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }
