@@ -20,24 +20,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // Disable automatic back button
-        title: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Image.asset(
-                'lib/assets/routemate.png', // Path to your logo image
-                height: 30, // Adjust height as needed
-              ),
-            ),
-            Text(
-              'RouteMate', // New title
-              style: TextStyle(fontSize: 20), // Adjust font size as needed
-            ),
-          ],
-        ),
-      ),
 
       body: IndexedStack(
         index: _selectedIndex,
