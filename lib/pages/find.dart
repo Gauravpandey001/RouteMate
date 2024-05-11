@@ -18,7 +18,8 @@ class FindPage extends StatefulWidget {
 class _FindPageState extends State<FindPage> {
   final Completer<GoogleMapController> _controllerGoogleMap =
   Completer<GoogleMapController>();
-  Marker? _currentLocationMarker; // Initialize as null
+  Marker? _currentLocationMarker; // Current Location Marker
+  Marker? _pickupMarker; // Pickup Marker
   bool _bottomCardVisible = true;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -38,15 +39,17 @@ class _FindPageState extends State<FindPage> {
       body: Stack(
         children: [
           GoogleMap(
-            mapType: MapType.hybrid,
+            mapType: MapType.terrain,
             zoomControlsEnabled: false,
             myLocationButtonEnabled: true,
             initialCameraPosition: _kGooglePlex,
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
             },
-            markers: Set.of(
-                (_currentLocationMarker != null) ? [_currentLocationMarker!] : []),
+            markers: Set.of([
+              if (_currentLocationMarker != null) _currentLocationMarker!,
+              if (_pickupMarker != null) _pickupMarker!,
+            ]),
             onCameraMove: (CameraPosition position) {
               if (_bottomCardVisible) {
                 setState(() {
@@ -55,14 +58,15 @@ class _FindPageState extends State<FindPage> {
               }
             },
           ),
-          if (_currentLocationMarker != null)
+          if (_pickupMarker != null) // Display Pickup Marker
             Positioned(
-              left: MediaQuery.of(context).size.width / 2.14 -
-                  12, // Adjust as needed
-              top: MediaQuery.of(context).size.height / 2.87 -
-                  10, // Adjust as needed
-              child: Icon(Icons.location_on,
-                  color: Colors.red, size: 48), // Customize the marker appearance here
+              left: MediaQuery.of(context).size.width / 2.14 - 12,
+              top: MediaQuery.of(context).size.height / 2.87 - 10,
+              child: Icon(
+                Icons.location_on,
+                color: Colors.red,
+                size: 48,
+              ),
             ),
           if (_bottomCardVisible)
             Positioned(
@@ -123,12 +127,23 @@ class _FindPageState extends State<FindPage> {
 
     // Create a Marker for the current location
     _currentLocationMarker = Marker(
-      markerId: MarkerId("currentLocation"),
+      markerId: MarkerId("Pickup Marker"),
       position: latLng,
       icon: BitmapDescriptor.defaultMarker,
       infoWindow: InfoWindow(
+        title: "Pickup Location",
+        snippet: "Your pickup location",
+      ),
+    );
+
+    // Set Pickup Marker
+    _pickupMarker = Marker(
+      markerId: MarkerId("current"),
+      position: latLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      infoWindow: InfoWindow(
         title: "Current Location",
-        snippet: "Your current location",
+        snippet: "This is your current location",
       ),
     );
 
@@ -138,7 +153,7 @@ class _FindPageState extends State<FindPage> {
     // Animate camera to the current position
     controller.animateCamera(CameraUpdate.newLatLngZoom(latLng, 17));
 
-    // Update the UI to show the marker
+    // Update the UI to show the markers
     setState(() {});
   }
 }

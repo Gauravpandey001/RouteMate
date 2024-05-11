@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class TopCard extends StatelessWidget {
+  final String? location;
+
+  const TopCard({Key? key, this.location}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -32,7 +36,7 @@ class TopCard extends StatelessWidget {
                 ),
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: 'Leaving from...',
+                    hintText: location ?? 'Leaving from...',
                     border: InputBorder.none,
                     prefixIcon: Icon(Icons.location_on, color: Colors.grey),
                   ),
