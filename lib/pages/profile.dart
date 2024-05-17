@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import '../auth/phoneauth.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -63,31 +62,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Profile'),
+        title: Text( 'Helllo '+_userName ,style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.blue.shade700,
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildProfileImage(),
-              SizedBox(height: 20),
-              _buildProfileInfo('User Name:', _userName),
-              _buildProfileInfo('Email:', _userEmail),
-              _buildProfileInfo('Gender:', _userGender),
-              _buildProfileInfo('Date of Birth:', _userDob),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _logout,
-                child: Text('Logout'),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'User ID: ${widget.userId}',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildProfileImage(),
+                SizedBox(height: 40),
+                _buildProfileCard(),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _logout,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade700,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Text('Logout',style: TextStyle(color: Colors.white,fontSize: 18),),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'User ID: ${widget.userId}',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -101,8 +107,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         alignment: Alignment.center,
         children: [
           CircleAvatar(
-            radius: 80,
+
+            radius: 60,
             backgroundImage: _imageUrl != null ? NetworkImage(_imageUrl!) : null,
+            backgroundColor: Colors.blue.shade200,
             child: _imageUrl == null ? Icon(Icons.person, size: 80, color: Colors.white) : null,
           ),
           if (_isLoading)
@@ -112,21 +120,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget _buildProfileCard() {
+    return SizedBox(
+      height: 350,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        color: Colors.blue.shade50,
+        elevation: 8,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildProfileInfo('User Name:', _userName),
+              _buildProfileInfo('Email:', _userEmail),
+              _buildProfileInfo('Gender:', _userGender),
+              _buildProfileInfo('Date of Birth:', _userDob),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildProfileInfo(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(fontSize: 18, color: Colors.black),
-        ),
-        SizedBox(height: 20),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 18, color: Colors.black),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -229,4 +267,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     });
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: ProfileScreen(userId: '123'), // Example user ID
+  ));
 }
