@@ -1,4 +1,4 @@
-# RoutMate :- Bike Pooling & Ride Sharing App
+# RouteMate :- Bike Pooling & Ride Sharing App
 
 ## Overview
 
