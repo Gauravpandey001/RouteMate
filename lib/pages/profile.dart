@@ -109,6 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.amber,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Hello $_userName', style: TextStyle(color: Colors.white)),
@@ -172,13 +173,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildProfileCard() {
     return SizedBox(
-      height: 350,
+      height: 280,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
         color: Colors.blue.shade50,
-        elevation: 8,
+        elevation: 15,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(

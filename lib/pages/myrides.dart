@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 Map<String, Map<String, String>> mockDatabase = {
   'user1': {
     'name': 'Rajesh Joshi',
-    'profilePicUrl': 'https://example.com/profile1.jpg',
+    'profilePicUrl': 'lib/assets/routemate.png',
   },
   'user2': {
     'name': 'Gaurav Pandey',
@@ -81,7 +81,7 @@ class MyRidesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber.shade800,
+      backgroundColor: Colors.amber,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('My Rides'),
@@ -102,8 +102,9 @@ class MyRidesScreen extends StatelessWidget {
               }
               final rideUserDetails = snapshot.data!;
               return Card(
+                elevation: 20,
                 margin: const EdgeInsets.symmetric(vertical: 25.0),
-                color: Colors.blue[800],
+                color: Colors.blue[50],
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -141,14 +142,14 @@ class MyRidesScreen extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           '$role $name',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.white),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),
         ),
       ],
     );
   }
 
   Widget _buildRideDetails(Ride ride) {
-    TextStyle detailTextStyle = const TextStyle(fontSize: 20, color: Colors.white);
+    TextStyle detailTextStyle = const TextStyle(fontSize: 20, );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

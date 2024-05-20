@@ -196,6 +196,7 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.amber,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Wallet'),
@@ -266,7 +267,10 @@ class _WalletScreenState extends State<WalletScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: Text('Add Money'),
+                            child: Text(
+                              'Add Money',
+                              style: TextStyle(color: Colors.white), // Set text color to white
+                            ),
                           ),
                           ElevatedButton(
                             onPressed: _withdrawMoneyDialog,
@@ -276,10 +280,14 @@ class _WalletScreenState extends State<WalletScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: Text('Withdraw Money'),
+                            child: Text(
+                              'Withdraw Money',
+                              style: TextStyle(color: Colors.white), // Set text color to white
+                            ),
                           ),
                         ],
-                      ),
+                      )
+
                     ],
                   ),
                 ),
