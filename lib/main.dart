@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/', // Ensure the initial route is set to '/'
       routes: {
-        '/': (context) => ProfileScreen(userId: 'BYz6BM4toRRWhnwkMYVuwB77bvJ2'), // Define your splash screen route
+        '/': (context) => DashboardScreen(userId: 'BYz6BM4toRRWhnwkMYVuwB77bvJ2'), // Define your splash screen route
      },
     );
   }
