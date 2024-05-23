@@ -17,10 +17,17 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
+  // Define your custom colors
+  Color blueColor = Colors.blue;
+  Color yellowColor = Colors.yellow;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(
+        title: Text('Dashboard'),
+        backgroundColor: blueColor, // Set app bar color
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: [
@@ -50,11 +57,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: blueColor, // Set selected item color
         unselectedItemColor: Colors.grey,
         selectedFontSize: 14.0,
         unselectedFontSize: 12.0,
         onTap: _onItemTapped,
+        backgroundColor: yellowColor, // Set bottom navigation bar color
       ),
     );
   }

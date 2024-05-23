@@ -67,18 +67,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow.shade100,
+      backgroundColor: Colors.blue.shade50,
       appBar: AppBar(
-
-        backgroundColor: Colors.grey.shade900,
-        title: Text('RouteMate',style: TextStyle(
-          color: Colors.white,
-          fontSize: 30,
-        )),
+        backgroundColor: Colors.blue.shade900,
+        title: Text(
+          'Registration',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 30,
+          ),
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.yellow[100], // Set background color
+          color: Colors.blue.shade50, // Set background color
         ),
         padding: EdgeInsets.all(20.0),
         child: SingleChildScrollView(
@@ -86,7 +88,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildTextFieldWithLabel('First Name', _firstNameController),
-              SizedBox(height: 16.0,),
+              SizedBox(height: 16.0),
               _buildTextFieldWithLabel('Last Name', _lastNameController),
               SizedBox(height: 16.0),
               _buildTextFieldWithLabel('Email', _emailController),
@@ -96,10 +98,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               _buildDropdownWithLabel('Gender', _selectedGender),
               SizedBox(height: 16.0),
               ElevatedButton(
-                style: ButtonStyle(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue.shade900, // Button background color// Button text color
                 ),
                 onPressed: _registerUser,
-                child: Text('Register'),
+                child: Text('Register',style: TextStyle(
+                  color: Colors.white,
+                ),),
               ),
             ],
           ),
@@ -115,17 +120,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         Text(
           label,
           style: TextStyle(
-            color: Colors.blueAccent,
+            color: Colors.blue.shade900,
             fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(height: 8.0),
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(),
+        SizedBox(
+          height: 50,
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide.none
+              ),
+            ),
           ),
         ),
       ],
@@ -139,7 +150,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         Text(
           label,
           style: TextStyle(
-            color: Colors.blueAccent,
+            color: Colors.blue.shade900,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -147,12 +158,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         Row(
           children: [
             Expanded(
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(),
+              child: SizedBox(
+                height: 50,
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      borderSide: BorderSide.none
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -160,7 +177,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               onPressed: () {
                 _selectDate(context);
               },
-              icon: Icon(Icons.calendar_today),
+              icon: Icon(Icons.calendar_today, color: Colors.blue.shade900),
             ),
           ],
         ),
@@ -175,29 +192,36 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         Text(
           label,
           style: TextStyle(
-            color: Colors.blueAccent,
+            color: Colors.blue.shade900,
             fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(height: 8.0),
-        DropdownButtonFormField<String>(
-          value: value,
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedGender = newValue!;
-            });
-          },
-          items: <String>['Male', 'Female', 'Other']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(),
+        SizedBox(
+          height: 50,
+          child: DropdownButtonFormField<String>(
+            value: value,
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedGender = newValue!;
+              });
+            },
+            items: <String>['Male', 'Female', 'Other']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide.none
+              ),
+              contentPadding: EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
+            ),
           ),
         ),
       ],
