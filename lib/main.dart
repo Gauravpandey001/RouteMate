@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:routemate/dashboard.dart';
+import 'package:routemate/splashscreen.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/', // Ensure the initial route is set to '/'
       routes: {
-        '/': (context) => const DashboardScreen(userId: 'BYz6BM4toRRWhnwkMYVuwB77bvJ2'), // Define your splash screen route
+        '/': (context) =>  SplashScreen(),
+        // DashboardScreen(userId: 'BYz6BM4toRRWhnwkMYVuwB77bvJ2')// Define your splash screen route
      },
     );
   }
