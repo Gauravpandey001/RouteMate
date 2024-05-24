@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:routemate/pages/home.dart';
 import 'package:routemate/pages/myrides.dart';
@@ -8,7 +7,7 @@ import 'package:routemate/pages/profile.dart';
 class DashboardScreen extends StatefulWidget {
   final String userId;
 
-  DashboardScreen({required this.userId});
+  const DashboardScreen({super.key, required this.userId});
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -25,7 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: const Text('Dashboard'),
         backgroundColor: blueColor, // Set app bar color
       ),
       body: IndexedStack(

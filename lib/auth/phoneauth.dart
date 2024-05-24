@@ -18,71 +18,94 @@ class _PhoneAuthState extends State<PhoneAuth> {
       appBar: AppBar(
         title: Text("Login"),
         centerTitle: true,
+        backgroundColor: Colors.blue,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: TextField(
-              controller: phoneController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: "Enter Phone Number",
-                suffixIcon: Icon(Icons.phone),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.yellow, Colors.orangeAccent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: phoneController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: "Enter Phone Number",
+                      suffixIcon: Icon(Icons.phone, color: Colors.blue),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: EdgeInsets.all(15),
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(height: 30),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white, backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    elevation: 5,
+                  ),
+                  onPressed: () async {
+                    try {
+                      await FirebaseAuth.instance.verifyPhoneNumber(
+                        phoneNumber: phoneController.text,
+                        verificationCompleted: (PhoneAuthCredential credential) {},
+                        verificationFailed: (FirebaseAuthException ex) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Verification failed: ${ex.message}'),
+                            ),
+                          );
+                        },
+                        codeSent: (String verificationId, int? resendToken) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OTPScreen(verificationId: verificationId),
+                            ),
+                          );
+                        },
+                        codeAutoRetrievalTimeout: (String verificationId) {},
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error: $e'),
+                        ),
+                      );
+                    }
+                  },
+                  child: Text("Verify Phone Number"),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 30),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                await FirebaseAuth.instance.verifyPhoneNumber(
-                  phoneNumber: phoneController.text,
-                  verificationCompleted: (PhoneAuthCredential credential) {
-                    // Handle auto-retrieval or instant verification on some devices
-                  },
-                  verificationFailed: (FirebaseAuthException ex) {
-                    // Handle verification failure
-                    print('Verification failed: ${ex.message}');
-                    // Display error message to the user
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Verification failed: ${ex.message}'),
-                      ),
-                    );
-                  },
-                  codeSent: (String verificationId, int? resendToken) {
-                    // Navigate to OTPScreen and pass verificationId
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OTPScreen(verificationId: verificationId),
-                      ),
-                    );
-                  },
-                  codeAutoRetrievalTimeout: (String verificationId) {
-                    // Handle code auto-retrieval timeout
-                    print('Code auto-retrieval timed out');
-                  },
-                );
-              } catch (e) {
-                // Handle other errors
-                print('Error: $e');
-                // Display error message to the user
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Error: $e'),
-                  ),
-                );
-              }
-            },
-            child: Text("Verify Phone Number"),
-          ),
-        ],
+        ),
       ),
     );
   }
