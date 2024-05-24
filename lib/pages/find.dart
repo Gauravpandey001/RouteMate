@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:routemate/pages/find/BottomCard.dart';
-import 'package:routemate/pages/find/TopCard.dart'; // Import TopCard.dart
-
+import 'package:routemate/pages/find/TopCard.dart';
 class FindPage extends StatefulWidget {
   final String userId;
 
@@ -21,6 +20,10 @@ class _FindPageState extends State<FindPage> {
   Marker? _currentLocationMarker; // Current Location Marker
   Marker? _pickupMarker; // Pickup Marker
   bool _bottomCardVisible = true;
+  bool _pickupConfirmed = false; // Variable to track if pickup is confirmed
+  LatLng? _centerLocation; // Center location of the map
+  String? _locationAddress; // Address of the center location
+  bool _searchingForRiders = false; // Flag to indicate searching for riders
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(29.42796133580664, 79.085749655962),
@@ -51,6 +54,7 @@ class _FindPageState extends State<FindPage> {
               if (_pickupMarker != null) _pickupMarker!,
             ]),
             onCameraMove: (CameraPosition position) {
+              _centerLocation = position.target; // Update the center location
               if (_bottomCardVisible) {
                 setState(() {
                   _bottomCardVisible = false;
@@ -66,6 +70,76 @@ class _FindPageState extends State<FindPage> {
                 Icons.location_on,
                 color: Colors.red,
                 size: 48,
+              ),
+            ),
+          if (!_bottomCardVisible)
+            Positioned(
+              left: 16.0,
+              right: 16.0,
+              bottom: 16.0,
+              child: ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    _bottomCardVisible = true;
+                    _pickupConfirmed = true; // Pickup confirmed
+                  });
+                  if (_centerLocation != null) {
+                    await _getAddressFromLatLng(_centerLocation!);
+                  }
+                },
+                child: Text('Confirm Pickup Location'),
+              ),
+            ),
+          if (!_bottomCardVisible && _pickupConfirmed) // Show button only if pickup is confirmed
+            Positioned(
+              left: 16.0,
+              right: 16.0,
+              bottom: 16.0,
+              child: ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    _searchingForRiders = true;
+                  });
+                  // Implement logic for confirming drop location and searching for riders
+                  // For demonstration purposes, we use a delay to simulate searching for riders
+                  await Future.delayed(Duration(seconds: 3));
+                  setState(() {
+                    _searchingForRiders = false;
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                child: Text('Confirm Drop Location'),
+              ),
+            ),
+          if (_searchingForRiders)
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text(
+                    'Looking for riders nearby...',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Reset all states and markers
+                      setState(() {
+                        _searchingForRiders = false;
+                        _bottomCardVisible = true;
+                        _pickupConfirmed = false;
+                        _pickupMarker = null;
+                      });
+                    },
+                    child: Text('Cancel'),
+                  ),
+                ],
               ),
             ),
           if (_bottomCardVisible)
@@ -89,24 +163,14 @@ class _FindPageState extends State<FindPage> {
                     ),
                   ],
                 ),
-                child: BottomCard(), // Use the BottomCard widget here
+                child: BottomCard(
+                  onLocationSelected: (LatLng position) {
+                    _addPickupMarker(position);
+                  },
+                ), // Use the BottomCard widget here
               ),
             ),
-          if (!_bottomCardVisible)
-            Positioned(
-              left: 16.0,
-              right: 16.0,
-              bottom: 16.0,
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _bottomCardVisible = true;
-                  });
-                },
-                child: Text('Confirm'),
-              ),
-            ),
-          TopCard(), // Use TopCard widget here
+          TopCard(location: _locationAddress), // Use TopCard widget here
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -127,23 +191,23 @@ class _FindPageState extends State<FindPage> {
 
     // Create a Marker for the current location
     _currentLocationMarker = Marker(
-      markerId: MarkerId("Pickup Marker"),
+      markerId: MarkerId("current"),
       position: latLng,
       icon: BitmapDescriptor.defaultMarker,
       infoWindow: InfoWindow(
-        title: "Pickup Location",
-        snippet: "Your pickup location",
+        title: "Current Location",
+        snippet: "This is your current location",
       ),
     );
 
     // Set Pickup Marker
     _pickupMarker = Marker(
-      markerId: MarkerId("current"),
+      markerId: MarkerId("Pickup Marker"),
       position: latLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
       infoWindow: InfoWindow(
-        title: "Current Location",
-        snippet: "This is your current location",
+        title: "Pickup Location",
+        snippet: "Your pickup location",
       ),
     );
 
@@ -156,4 +220,40 @@ class _FindPageState extends State<FindPage> {
     // Update the UI to show the markers
     setState(() {});
   }
+
+  Future<void> _getAddressFromLatLng(LatLng position) async {
+    try {
+      List<Placemark> placemarks =
+      await placemarkFromCoordinates(position.latitude, position.longitude);
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        _locationAddress =
+        "${place.name}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
+        setState(() {});
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _addPickupMarker(LatLng position) async {
+    _pickupMarker = Marker(
+      markerId: MarkerId("pickup"),
+      position: position,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      infoWindow: InfoWindow(
+        title: "Pickup Location",
+        snippet: "Selected pickup location",
+      ),
+    );
+
+    final GoogleMapController controller = await _controllerGoogleMap.future;
+    controller.animateCamera(CameraUpdate.newLatLngZoom(position, 17));
+
+    setState(() {
+      _bottomCardVisible = false;
+    });
+  }
 }
+

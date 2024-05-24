@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 class TopCard extends StatelessWidget {
   final String? location;
+  final TextEditingController _locationController;
 
-  const TopCard({Key? key, this.location}) : super(key: key);
+  TopCard({Key? key, this.location})
+      : _locationController = TextEditingController(text: location),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +38,9 @@ class TopCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: TextField(
+                  controller: _locationController,
                   decoration: InputDecoration(
-                    hintText: location ?? 'Leaving from...',
+                    hintText: 'Leaving from...',
                     border: InputBorder.none,
                     prefixIcon: Icon(Icons.location_on, color: Colors.grey),
                   ),
